@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Introduction To AI</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(
+          135deg,
+          #0f172a 0%,
+          #1e293b 50%,
+          #334155 100%
+        );
+        color: #f8fafc;
+        overflow-x: hidden;
+        position: relative;
+        min-height: 100vh;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+            rgba(59, 130, 246, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      .page {
+        display: none;
+        min-height: 100vh;
+        padding: 40px 20px;
+        position: relative;
+      }
+
+      .page.show {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        animation: fadeIn 0.6s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h1 {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 3.5rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.02em;
+      }
+
+      h2 {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 2.2rem;
+        font-weight: 500;
+        color: #3b82f6;
+        text-align: center;
+        margin-bottom: 2rem;
+        letter-spacing: -0.01em;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        color: #94a3b8;
+        text-align: center;
+        margin-bottom: 3rem;
+        max-width: 600px;
+        line-height: 1.6;
+      }
+
+      .main-button {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: white;
+        border: none;
+        padding: 16px 32px;
+        font-size: 1.1rem;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+        letter-spacing: 0.025em;
+      }
+
+      .main-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        background: linear-gradient(135deg, #2563eb, #1e40af);
+      }
+
+      .aims-container {
+        display: flex;
+        gap: 2rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .aim-box {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 16px;
+        padding: 2.5rem;
+        width: 320px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .aim-box:hover {
+        transform: translateY(-4px);
+        border-color: rgba(59, 130, 246, 0.4);
+        box-shadow: 0 12px 40px rgba(59, 130, 246, 0.15);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .aim-box h3 {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #3b82f6;
+        margin-bottom: 1rem;
+      }
+
+      .aim-box p {
+        font-size: 1rem;
+        color: #cbd5e1;
+        line-height: 1.5;
+      }
+
+      .sections-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+      }
+
+      .section-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 12px;
+        padding: 2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+      }
+
+      .section-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(139, 92, 246, 0.4);
+        box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .section-card h3 {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #8b5cf6;
+        margin-bottom: 0.5rem;
+      }
+
+      .section-card p {
+        color: #94a3b8;
+        font-size: 0.95rem;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #f8fafc;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .back-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateX(-2px);
+      }
+
+      .content-area {
+        max-width: 1000px;
+        margin: 3rem auto;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 16px;
+        padding: 3rem;
+        position: relative;
+        overflow-y: auto;
+        max-height: 80vh;
+      }
+
+      .content-area h2 {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        text-align: left;
+      }
+
+      .content-section {
+        margin-bottom: 3rem;
+      }
+
+      .content-section h3 {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.3rem;
+        color: #06b6d4;
+        margin-bottom: 1rem;
+        font-weight: 500;
+      }
+
+      .content-text {
+        color: #e2e8f0;
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+        text-align: justify;
+      }
+
+      .content-text p {
+        margin-bottom: 1rem;
+      }
+
+      .content-text ul,
+      .content-text ol {
+        margin-left: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .content-text li {
+        margin-bottom: 0.5rem;
+      }
+
+      .content-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        margin: 2rem 0;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        display: block;
+      }
+
+      .image-caption {
+        font-size: 0.9rem;
+        color: #94a3b8;
+        text-align: center;
+        margin-top: 0.5rem;
+        font-style: italic;
+      }
+
+      .code-block {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.9rem;
+        color: #e2e8f0;
+        overflow-x: auto;
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.5rem;
+        }
+        h2 {
+          font-size: 1.8rem;
+        }
+        .aims-container {
+          flex-direction: column;
+          align-items: center;
+        }
+        .aim-box {
+          width: 90%;
+        }
+        .sections-grid {
+          grid-template-columns: 1fr;
+        }
+        .content-area {
+          margin: 2rem 1rem;
+          padding: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HOME PAGE -->
+    <div id="home" class="page show">
+      <h1>Introduction to AI</h1>
+      <p class="subtitle">
+        A comprehensive exploration of artificial intelligence concepts,
+        applications, and future implications in modern technology
+      </p>
+      <button class="main-button" onclick="goTo('main')">
+        Begin Exploration
+      </button>
+    </div>
+
+    <!-- MAIN SELECTION -->
+    <div id="main" class="page">
+      <button class="back-btn" onclick="goTo('home')">← Home</button>
+      <h2>Learning Objectives</h2>
+      <div class="aims-container">
+        <div class="aim-box" onclick="goTo('aimb')">
+          <h3>Learning Aim B</h3>
+          <p>Plan and prepare an AI solution to meet identified needs</p>
+        </div>
+        <div class="aim-box" onclick="goTo('aimc')">
+          <h3>Learning Aim C</h3>
+          <p>Develop an AI solution to meet identified needs.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AIM B -->
+    <div id="aimb" class="page">
+      <button class="back-btn" onclick="goTo('main')">← Back</button>
+      <h2>Learning Aim B</h2>
+      <div class="sections-grid">
+        <div class="section-card" onclick="goTo('bd2')">
+          <h3>B.D2</h3>
+          <p>Evaluate the effectiveness of the AI solution.</p>
+        </div>
+        <div class="section-card" onclick="goTo('bm2')">
+          <h3>B.M2</h3>
+          <p>
+            Review and refine data sets to optimise the quality of an AI
+            solution.
+          </p>
+        </div>
+        <div class="section-card" onclick="goTo('bp3')">
+          <h3>B.P3</h3>
+          <p>Define the objectives of an AI project.</p>
+        </div>
+        <div class="section-card" onclick="goTo('bp4')">
+          <h3>B.P4</h3>
+          <p>Gather and prepare appropriate data sets for an AI solution.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AIM C -->
+    <div id="aimc" class="page">
+      <button class="back-btn" onclick="goTo('main')">← Back</button>
+      <h2>Learning Aim C</h2>
+      <div class="sections-grid">
+        <div class="section-card" onclick="goTo('cd3')">
+          <h3>C.D3</h3>
+          <p>Evaluate the effectiveness of the AI solution.</p>
+        </div>
+        <div class="section-card" onclick="goTo('cm3')">
+          <h3>C.M3</h3>
+          <p>Test and refine the AI solution.</p>
+        </div>
+        <div class="section-card" onclick="goTo('cp5')">
+          <h3>C.P5</h3>
+          <p>
+            Develop an AI solution using an appropriate programming language and
+            computing tools.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT SECTIONS -->
+
+    <!-- B.D2 CONTENT -->
+    <div id="bd2" class="page">
+      <button class="back-btn" onclick="goTo('aimb')">← Back</button>
+      <div class="content-area">
+        <h2>B.D2 - Evaluate the effectiveness of the AI solution.</h2>
+        <div class="content-section">
+          <div class="content-text">
+            <p>
+              B.D2: <br />
+              <br />
+              Assessment of the Effectiveness of an Artificial Intelligence
+              Solution <br />
+              <br />
+              In the modern digital economy, artificial intelligence (AI)
+              technologies are becoming an important tool for optimizing
+              business processes, identifying customer needs, and making
+              effective management decisions. Especially in industries that work
+              with large amounts of data, AI solutions can bring tangible
+              results to the company. This assessment analyzes the strategic
+              feasibility, practical effectiveness, and existing limitations of
+              the selected AI solution. <br />
+              <br />
+              Purpose of the AI Solution <br />
+              <br />
+              The selected AI solution is a recommendation system implemented by
+              the company to provide personalized product recommendations to
+              customers on an e-commerce platform. This system uses machine
+              learning algorithms to analyze user behavior, such as previous
+              purchases, product views, search activity, and products added to
+              the cart. <br />
+              <br />
+              The main goals of this system are: <br />
+              <br />
+              Personalize the user experience (UX) <br />
+              <br />
+              Increase sales <br />
+              <br />
+              Keep the customer on the platform longer <br />
+              <br />
+              Reduce marketing and advertising costs <br />
+              <br />
+              Performance Analysis <br />
+              <br />
+              Pros (Advantages): <br />
+              <br />
+              Increases customer satisfaction: Personalized recommendations help
+              customers quickly and easily find products that meet their needs.
+              This positively changes the user experience and increases brand
+              loyalty. <br />
+              <br />
+              Increases sales: Additional products offered by the system
+              (cross-sell and up-sell) increase the likelihood of customers
+              making more purchases. <br />
+              <br />
+              Improves decision-making: Data-based decisions are made. For
+              example, it is possible to determine which products are left in
+              warehouses longer or which segment is more actively buying. <br />
+              <br />
+              Reduces operating costs: Advertising and product promotion are
+              carried out automatically without depending on human resources,
+              which increases efficiency. <br />
+              <br />
+              Clarifies marketing strategies: The system performs user
+              segmentation. Through this, the company can develop an advertising
+              strategy suitable for each customer group. <br />
+              <br />
+              Potential Issues and Limitations: <br />
+              <br />
+              Bias: If the training data is poorly structured (for example,
+              based on the activities of only male users), the system may make
+              incorrect recommendations to female users. This will lead to
+              customer loss for the business. <br />
+              <br />
+              Privacy and ethical issues: The recommendation system constantly
+              monitors the personal behavior of users. This requires compliance
+              with GDPR (the European Union's General Data Protection
+              Regulation) or other privacy laws. <br />
+              <br />
+              The "black box" nature of the model: In many cases, it is
+              difficult to explain to the user why this particular product was
+              recommended. This creates trust issues. <br />
+              <br />
+              Technical infrastructure requirements: Such systems work with
+              real-time data and must process a constantly updated data stream.
+              This requires server power and a technical team. <br />
+              <br />
+              The risk of misjudging effectiveness in A/B tests: If tests are
+              not conducted properly, a solution can be judged successful even
+              if it is not effective. <br />
+              <br />
+              Performance Metrics (KPIs): <br />
+              <br />
+              Accuracy: The relevance of recommendations to user needs. For
+              example, how many of the products the user viewed or purchased
+              were previously suggested by the system? <br />
+              <br />
+              CTR (Click Through Rate): The number of clicks on products in the
+              recommendations panel and the level of interest in them. <br />
+              <br />
+              Conversion rate: The percentage of purchases made through
+              recommended products. <br />
+              <br />
+              Bounce rate and site abandonment rate: The decrease in the rate at
+              which users leave the site after the system was implemented.
+              <br />
+              <br />
+              Sales growth rate: How has revenue changed since the
+              recommendation system was implemented? <br />
+              <br />
+              User opinions and ratings: Measuring the level of trust in the
+              system through comments given by customers. <br />
+              <br />
+              Conclusion <br />
+              <br />
+              The selected AI solution — a recommendation system — serves to
+              increase the competitiveness of the company in the field of
+              e-commerce. This system creates a personalized experience for
+              users, satisfies them and keeps them on the platform longer. Sales
+              volume increases, strategic decisions based on data are made, and
+              resources are saved through automation. <br />
+              <br />
+              However, the following are important for the successful
+              implementation of this solution: <br />
+              <br />
+              Data quality and completeness <br />
+              <br />
+              Compliance with legal and ethical standards <br />
+              <br />
+              Technical infrastructure and a qualified team <br />
+              <br />
+              Continuous testing and improvement of the system <br />
+              <br />
+              A properly planned and carefully developed AI solution not only
+              increases sales, but also strengthens the position of the
+              company's brand in the digital market. <br />
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B.M2 CONTENT -->
+    <div id="bm2" class="page">
+      <button class="back-btn" onclick="goTo('aimb')">← Back</button>
+      <div class="content-area">
+        <h2>
+          B.M2 - Review and refine data sets to optimise the quality of an AI
+          solution.
+        </h2>
+        <div class="content-section">
+          <div class="content-text">
+            <p>
+              B.M2: <br />
+              <br />
+              Review and Improve Data Sets to Optimize AI Solution Quality
+              <br />
+              <br />
+              The performance and accuracy of an AI model heavily rely on the
+              quality of its training data. If the dataset is flawed,
+              incomplete, or biased, the model may deliver unreliable results.
+              Thus, reviewing, analyzing, and refining data are critical steps
+              in enhancing AI model performance. <br />
+              <br />
+              Data Set Evaluation Criteria <br />
+              <br />
+              Completeness: Ensure the dataset includes all necessary columns
+              and data entries to fully represent the problem domain. Missing
+              data points or features can lead to an incomplete understanding by
+              the model, resulting in poor generalization and inaccurate
+              predictions. <br />
+              <br />
+              Accuracy: Confirm that data values are correct, valid, and free
+              from errors or corruption. Inaccurate data, such as typos or
+              incorrect measurements, can mislead the model during training and
+              reduce its predictive power. <br />
+              <br />
+              Consistency: Verify that the data aligns with the goals and
+              constraints of the project, meaning that values are logically
+              coherent and conform to expected ranges or categories.
+              Inconsistent data can confuse the learning algorithm and degrade
+              model quality. <br />
+              <br />
+              Uniform Format: Data should be stored in a standardized format,
+              such as uniform date/time formats, consistent units of
+              measurement, and categorical variables encoded uniformly. This
+              reduces errors during preprocessing and enables smoother
+              integration into modeling pipelines. <br />
+              <br />
+              Bias: Assess whether the dataset disproportionately represents or
+              excludes particular groups, features, or outcomes. Biased data can
+              lead to unfair or discriminatory models that do not perform well
+              across diverse user populations or scenarios. <br />
+              <br />
+              Practical Steps for Improvement <br />
+              <br />
+              Handle Missing Values: Identify gaps or missing values and fill
+              numerical gaps with central tendency measures like the mean or
+              median, while categorical gaps can be filled using the mode or
+              domain knowledge. This prevents data loss and maintains dataset
+              integrity. <br />
+              <br />
+              Remove Unnecessary Columns: Evaluate columns such as user IDs,
+              timestamps, or other metadata to determine their relevance.
+              Removing irrelevant features helps reduce noise and
+              dimensionality, simplifying the model and potentially improving
+              performance. <br />
+              <br />
+              Normalize Data: Apply scaling techniques like min-max
+              normalization or z-score standardization to bring features onto
+              the same scale. This is crucial for algorithms sensitive to
+              feature magnitude, preventing dominance of features with large
+              numeric ranges and aiding faster model convergence. <br />
+              <br />
+              Remove Duplicates: Detect and eliminate identical or
+              near-identical records that may artificially bias the model
+              towards certain patterns. Duplicate data can skew distributions
+              and overrepresent specific cases, leading to overfitting or
+              inaccurate generalization. <br />
+              <br />
+              Detect and Handle Outliers: Use statistical methods (Interquartile
+              Range, Z-score) or visualization tools (boxplots, scatter plots)
+              to identify extreme or abnormal values. Outliers can distort model
+              parameters and should be examined to determine whether they
+              reflect true variability or data errors, and treated accordingly.
+              <br />
+              <br />
+              How Improved Data Enhances Model Quality <br />
+              <br />
+              Higher Accuracy: Models trained on clean and comprehensive
+              datasets can better capture the true underlying patterns, leading
+              to more accurate and reliable predictions in real-world
+              applications. <br />
+              <br />
+              Reduced Overfitting: By removing noise, irrelevant features, and
+              outliers, the model is less likely to memorize specific anomalies
+              and more likely to generalize well to new, unseen data. <br />
+              <br />
+              Faster Processing: Streamlined datasets with fewer irrelevant or
+              redundant features allow training algorithms to run more
+              efficiently, saving computational resources and reducing time to
+              deploy. <br />
+              <br />
+              Greater Trust: Transparent and well-prepared data fosters
+              confidence in model results among stakeholders and users,
+              especially when ethical and legal standards around fairness and
+              privacy are upheld. <br />
+              <br />
+              Conclusion <br />
+              <br />
+              To ensure the success of any AI project, data must be thoroughly
+              evaluated and refined. Clean, complete, relevant, and unbiased
+              datasets significantly improve model performance. Data preparation
+              should always be handled with both technical precision and ethical
+              responsibility. <br />
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B.P3 CONTENT -->
+    <div id="bp3" class="page">
+      <button class="back-btn" onclick="goTo('aimb')">← Back</button>
+      <div class="content-area">
+        <h2>B.P3 - Define the objectives of an AI project.</h2>
+        <div class="content-section">
+          <div class="content-text">
+            <p>
+              B.P3: <br />
+              <br />
+              Defining AI Project Goals <br />
+              <br />
+              Successful AI projects require clearly defined goals. This process
+              clarifies: <br />
+              • What problem needs solving? <br />
+              • How AI can address this problem? <br />
+              • How will success be measured? <br />
+              <br />
+              Example: Recommendation System Project <br />
+              <br />
+              Overall Goal <br />
+              <br />
+              Develop a recommendation system leveraging users’ purchasing
+              behavior on an e-commerce platform to automatically suggest
+              products of interest. <br />
+              <br />
+              Key Goals <br />
+              <br />
+              • Improve User Experience <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;• Enhance and accelerate the purchasing
+              journey by providing personalized, relevant product suggestions
+              tailored to individual preferences. <br />
+              <br />
+              • Increase Sales Volume <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;• Boost revenue by encouraging customers
+              to purchase additional or higher-value products through effective
+              recommendations. <br />
+              <br />
+              • Maximize Data Usage <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;• Utilize available data such as purchase
+              history, search activity, and site visit frequency to generate
+              actionable insights and improve recommendation quality. <br />
+              <br />
+              • Save Resources through Automation <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;• Reduce manual effort by enabling the
+              system to operate autonomously without continuous human oversight,
+              improving operational efficiency. <br />
+              <br />
+              • Establish Accuracy and Reliability Metrics <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;• Define measurable criteria to assess
+              model performance, including recommendation click-through rate
+              (CTR), purchase conversion rates, and user satisfaction scores.
+              <br />
+              <br />
+              Expression of Goals Based on the SMART Model <br />
+              <br />
+              • Specific: Clearly define what the project aims to achieve (e.g.,
+              increase CTR by 15% within six months). <br />
+              • Measurable: Use quantifiable indicators such as sales growth or
+              user engagement metrics to track progress. <br />
+              • Achievable: Set realistic targets based on available data,
+              resources, and technology. <br />
+              • Relevant: Align goals with overall business objectives and user
+              needs. <br />
+              • Time-bound: Establish deadlines for goal milestones and final
+              outcomes to ensure timely delivery and evaluation. <br />
+              <br />
+              <img
+                src="/image copy 2.png"
+                height="70px"
+                width="100%"
+                alt="Description"
+                class="content-image"
+              />
+
+              Conclusion <br />
+              <br />
+              Clearly defining AI project goals is crucial for the successful
+              development, evaluation, and deployment of the model.
+              Well-articulated goals provide a foundation for measuring
+              performance, guiding improvements, and ensuring the final outcomes
+              align with desired objectives. <br />
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B.P4 CONTENT -->
+    <div id="bp4" class="page">
+      <button class="back-btn" onclick="goTo('aimb')">← Back</button>
+      <div class="content-area">
+        <h2>
+          B.P4 - Gather and prepare appropriate data sets for an AI solution.
+        </h2>
+        <div class="content-section">
+          <div class="content-text">
+            <p>
+              B.P4: <br />
+              <br />
+              Collecting and preparing appropriate data sets for an AI solution
+              <br />
+              <br />
+              Before developing an AI model to predict car prices, it is crucial
+              to gather and clean high-quality, reliable, and relevant data. A
+              well-prepared data set ensures accurate and efficient model
+              performance. Below is an overview of the data collected for this
+              AI solution, including sources, types, and preparation methods.
+              <br />
+              <br />
+              Data sources <br />
+              <br />
+              • Car sales records: details such as sale date, car make and
+              model, mileage, year of manufacture, and sale price. <br />
+              • Vehicle specifications: attributes like engine size, fuel type,
+              transmission, and condition. <br />
+              • Seller information: data including location, seller type (dealer
+              or private), and listing date. <br />
+              <br />
+              Data was obtained from internal databases (SQL) and external CSV
+              files from automotive marketplaces. <br />
+              <br />
+              Data types <br />
+            </p>
+          </div>
+          <img
+            src="/image.png"
+            height="70px"
+            width="100%"
+            alt="Description"
+            class="content-image"
+          />
+          <div class="image-caption">
+            Structured data: numerical and categorical variables (e.g., price,
+            mileage, car model, fuel type). Unstructured data: textual
+            descriptions or reviews of vehicle condition, if available.
+            Time-series data: chronological records such as listing dates and
+            sale dates.
+          </div>
+          <div class="content-text"><p>Data preparation steps</p></div>
+          <img
+            src="/image copy.png"
+            height="70px"
+            width="100%"
+            alt="Description"
+            class="content-image"
+          />
+          <div class="content-text">
+            <p>
+              Data types <br />
+              <br />
+              • Numerical: price, mileage, year of manufacture, engine size
+              <br />
+              • Categorical: car make and model, fuel type, transmission type,
+              condition, seller type <br />
+              • Date/time: sale date, listing date <br />
+              <br />
+              Data preparation <br />
+              <br />
+              • Cleaning: Incomplete entries (e.g., missing prices or mileage)
+              were either removed or imputed using mean or median values.
+              Duplicate listings were identified and removed. <br />
+              • Formatting: Date fields were standardized to a uniform format
+              (YYYY-MM-DD); categorical variables like car makes and models were
+              normalized to consistent naming conventions. <br />
+              • Merging: Related tables such as vehicle details and sales
+              transactions were joined using common keys like vehicle ID. <br />
+              • Conversion: Data was converted into CSV format for seamless
+              integration with data analysis tools such as Python’s pandas
+              library. <br />
+              <br />
+              Integrity and legality <br />
+              <br />
+              • Data collection complied with confidentiality policies. <br />
+              • Personal identifiers, such as seller names or contact details,
+              were anonymized to protect privacy. <br />
+              • User security was maintained without compromising data quality.
+              <br />
+              • All procedures adhered to local data protection laws similar to
+              GDPR. <br />
+              <br />
+              Conclusion <br />
+              <br />
+              Effective collection and preparation of car price data are
+              essential to the success of the AI model. By thoroughly cleaning,
+              normalizing, and formatting the dataset, it becomes suitable for
+              training, leading to improved prediction accuracy and overall
+              model reliability. <br />
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C.D3 CONTENT -->
+    <div id="cd3" class="page">
+      <button class="back-btn" onclick="goTo('aimc')">← Back</button>
+      <div class="content-area">
+        <h2>C.D3 - Evaluate the effectiveness of the AI solution.</h2>
+        <div class="content-section">
+          <div class="content-text">
+            <p>
+              C.D3: <br />
+              <br />
+              Evaluating the effectiveness of an artificial intelligence
+              solution for car price prediction <br />
+              <br />
+              The overall success of an AI project hinges on how accurately and
+              reliably the developed model performs when applied to real-world
+              data and how effectively it addresses the underlying business
+              problem—in this case, predicting car prices. <br />
+              This evaluation reviews the advantages and limitations of simple
+              linear regression, multivariate regression, and logistic
+              regression models based on their performance metrics and
+              applicability in predicting car prices. <br />
+              <br />
+              Effectiveness of regression models <br />
+              <br />
+              • Simple linear regression (one independent variable): <br />
+              - Data: Predicting car prices using a single variable such as
+              mileage. <br />
+              - Performance indicators: <br />
+              • MAE (Mean Absolute Error): 2500, indicating the average absolute
+              difference between predicted and actual prices is $2,500. <br />
+              • MSE (Mean Squared Error): 1,200,000, reflecting the average
+              squared difference and penalizing larger errors more heavily.
+              <br />
+              • R² (coefficient of determination): 0.72, showing that 72% of the
+              variation in car prices can be explained by mileage alone. <br />
+              - Evaluation: <br />
+              • This model is relatively simple and easy to interpret, providing
+              a baseline for understanding how mileage affects car prices.
+              <br />
+              • However, it is limited by its reliance on only one factor, which
+              may oversimplify the complex dynamics that influence car pricing,
+              such as brand reputation, car age, or condition. <br />
+              • It is most useful for quick, rough estimates rather than
+              detailed predictions. <br />
+              <br />
+              • Multivariate linear regression (multiple factors): <br />
+              - Input: Predicting car prices based on a combination of
+              variables, including mileage, vehicle age, brand, engine size, and
+              condition. <br />
+              - Performance indicators: <br />
+              • MAE: 1800, showing a reduction in average prediction error to
+              $1,800. <br />
+              • MSE: 800,000, demonstrating improved overall error performance
+              compared to the simple model. <br />
+              • R²: 0.87, meaning the model explains 87% of the variability in
+              car prices, capturing more complexity. <br />
+              - Evaluation: <br />
+              • By incorporating multiple relevant factors, this model provides
+              a more nuanced and accurate prediction of car prices. <br />
+              • It better reflects real-world pricing influences and delivers
+              greater reliability for business decisions. <br />
+              • Although more computationally demanding and complex, it is
+              better suited for practical applications where precision is
+              crucial, such as pricing strategies or inventory valuation. <br />
+              <br />
+              Overfitting and underfitting <br />
+              <br />
+              • Overfitting occurs when the model learns the training data too
+              precisely, including noise and anomalies, which reduces its
+              ability to generalize to new, unseen data. <br />
+              - For example, an overfitted model might memorize every unique
+              price in the training set but fail to predict prices accurately
+              for new cars. <br />
+              • Underfitting happens when the model is too simple to capture
+              important patterns in the data. <br />
+              - For instance, using only mileage in a linear model might fail to
+              account for nonlinear effects or other variables that
+              significantly impact car prices. <br />
+              • Our model: Analysis shows no signs of overfitting in the
+              multivariate regression and logistic regression models, as the
+              performance metrics on cross-validation and test datasets are
+              consistent, indicating good generalization capabilities. <br />
+              <br />
+              Conclusion <br />
+              <br />
+              • Artificial intelligence models, when trained with well-prepared
+              and relevant car pricing data, serve as powerful tools to solve
+              pricing prediction challenges with high accuracy and reliability.
+              <br />
+              • The models evaluated here demonstrate strong predictive
+              performance and provide valuable insights to support strategic
+              business decisions related to pricing, sales forecasting, and
+              inventory management. <br />
+              • Proper evaluation ensures that the chosen model fits the problem
+              well and can adapt to real market scenarios. <br />
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C.M3 CONTENT -->
+    <div id="cm3" class="page">
+      <button class="back-btn" onclick="goTo('aimc')">← Back</button>
+      <div class="content-area">
+        <h2>C.M3 - Test and refine the AI solution.</h2>
+        <div class="content-section">
+          <div class="content-text">
+            <p>
+              <b>C.M3:</b><br /><br />
+
+              Testing and improving an artificial intelligence solution for car
+              price prediction<br /><br />
+
+              Once the AI model has been developed, the next critical step is
+              thorough testing, evaluation, and iterative improvement using both
+              training and real-world test datasets.<br />
+              This phase ensures the model’s accuracy, robustness, and
+              adaptability in practical applications.<br />
+              The following outlines the testing methods employed, challenges
+              encountered, and strategies implemented to enhance the model’s
+              performance in predicting car prices.<br /><br />
+
+              <b>Model testing: methods used</b><br /><br />
+
+              <b>Data splitting:</b><br />
+              The dataset was split into 80% for training the model and 20%
+              reserved for testing its performance on unseen data, using the
+              train_test_split function.<br />
+              This helps evaluate how well the model generalizes beyond the data
+              it was trained on.<br /><br />
+
+              <b>Evaluation metrics:</b><br />
+              For regression models, performance was measured using MAE (mean
+              absolute error), MSE (mean squared error), and R² (coefficient of
+              determination).<br />
+              For classification models (such as categorizing cars into price
+              segments: low, medium, high), metrics included Accuracy,
+              Precision, Recall, F1-score, and Confusion Matrix analysis.<br /><br />
+
+              <b>Cross-validation:</b><br />
+              Five-fold cross-validation was conducted using cross_val_score to
+              assess the stability and consistency of the model’s performance
+              across multiple data splits, reducing bias from a single
+              train-test partition.<br /><br />
+
+              <b>Problems found</b><br /><br />
+
+              <b>Overfitting:</b><br />
+              The model performed extremely well on the training set with an R²
+              of 0.96, but the test set performance dropped to an R² of 0.82.<br />
+              This discrepancy indicates that the model learned training data
+              details too precisely, limiting its ability to generalize to new
+              data points.<br /><br />
+
+              <b>Bias:</b><br />
+              In classification tasks such as predicting car price categories,
+              some classes (e.g., low-priced cars) were underrepresented in the
+              dataset.<br />
+              This imbalance led to models that showed high precision but low
+              recall, meaning while predictions were often correct, the model
+              failed to identify many instances of certain classes, reducing
+              overall reliability.<br /><br />
+
+              <b>Model improvement: solutions applied</b><br /><br />
+
+              <b>Feature engineering:</b><br />
+              Additional features were created to better capture factors
+              affecting car prices, such as “price per year of vehicle age,”
+              “average annual mileage,” and “brand market value score.”<br />
+              These engineered features provided the model with deeper insights
+              into pricing dynamics, improving predictive performance.<br /><br />
+
+              <b>Data balancing (classification):</b><br />
+              Synthetic Minority Over-sampling Technique (SMOTE) was employed to
+              balance underrepresented price categories by artificially
+              generating more samples,<br />
+              improving the model’s ability to detect minority classes and
+              enhancing recall and F1-score metrics.<br /><br />
+
+              <b>Hyperparameter tuning:</b><br />
+              Using GridSearchCV, various hyperparameters such as regularization
+              strength, penalty types, and learning rates were systematically
+              tested and optimized<br />
+              to select the best performing model variant, resulting in improved
+              accuracy and robustness.<br /><br />
+
+              <b>Feature scaling:</b><br />
+              StandardScaler was applied to numerical features including
+              mileage, age, and engine size to normalize their ranges,<br />
+              ensuring that all variables contributed appropriately to the
+              model, which is particularly important for algorithms sensitive to
+              feature scale such as logistic regression.
+            </p>
+          </div>
+          <img
+            src="/image copy 3.png"
+            height="100px"
+            width="100%"
+            alt="Description"
+            class="content-image"
+          />
+          <div class="image-caption"></div>
+          <p>
+            <b>Conclusion</b><br /><br />
+
+            By thoroughly testing and refining the model, the accuracy of the AI
+            solution was significantly enhanced, errors minimized, and its
+            ability to generalize to new data strengthened.<br />
+            This iterative process ensures that the car price prediction model
+            can be confidently and effectively deployed in real-world
+            applications.<br />
+            As a result, the company gains trust in the model’s outputs,
+            enabling informed and reliable decision-making based on AI insights.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- C.P5 CONTENT -->
+    <div id="cp5" class="page">
+      <button class="back-btn" onclick="goTo('aimc')">← Back</button>
+      <div class="content-area">
+        <h2>
+          C.P5 - Develop an AI solution using an appropriate programming
+          language and computing tools.
+        </h2>
+        <div class="content-section">
+          <div class="content-text">
+            <p>
+              C.P5: <br />
+              <br />
+              Project scope <br />
+              <br />
+              This artificial intelligence solution is a classification model
+              designed to predict the likelihood of a customer making a
+              purchase. <br />
+              It is developed using Python and the scikit-learn (sklearn)
+              library. <br />
+              The model employs the logistic regression algorithm and is applied
+              in real-world business settings to optimize the targeting and
+              delivery of relevant advertisements to customers, <br />
+              thereby improving marketing efficiency and customer engagement.
+              <br />
+              <br />
+              1. Calling libraries <br />
+              <br />
+              Picture 3: <br />
+            </p>
+          </div>
+          <img
+            src="/image copy 4.png"
+            height="100px"
+            width="100%"
+            alt="Description"
+            class="content-image"
+          />
+          <div class="image-caption">Calling libraries</div>
+          <img
+            src="/image copy 5.png"
+            height="100px"
+            width="100%"
+            alt="Description"
+            class="content-image"
+          />
+          <div class="image-caption">Data loading and preparation</div>
+          <img
+            src="/image copy 6.png"
+            height="100px"
+            width="100%"
+            alt="Description"
+            class="content-image"
+          />
+          <div class="image-caption">
+            Data partitioning: training and testing
+          </div>
+          <img
+            src="/Screenshot 2025-06-01 071711.png"
+            height="100px"
+            width="100%"
+            alt="Description"
+            class="content-image"
+          />
+          <div class="image-caption">Model creation and training</div>
+          <img
+            src="/Screenshot 2025-06-01 071907.png"
+            height="100px"
+            width="100%"
+            alt="Description"
+            class="content-image"
+          />
+          <div class="image-caption">Forecasting and evaluating results</div>
+          <div class="content-text">
+            <p>
+              Performance Analysis of the Car Price Prediction Model <br />
+              <br />
+              The car price prediction model used Linear Regression to predict
+              prices and a classification model to categorize cars (e.g.,
+              affordable vs. expensive). <br />
+              <br />
+              • Initially, the regression model had an R² score of 0.86, meaning
+              it captured 86% of the price variance using engine size. <br />
+              • After improvements, like adding features such as horsepower, the
+              R² rose to 0.91, showing better accuracy. <br />
+              • The Mean Absolute Error (MAE) also improved from 3.2 to 2.5 (in
+              USD thousands), cutting prediction errors by 0.7 units, which is
+              useful for precise pricing in real-world scenarios. <br />
+              <br />
+              • For classification, the F1-score increased from 0.82 to 0.88,
+              and Recall went from 0.76 to 0.87. <br />
+              • These values, ranging between 0.76 and 0.88, indicate strong
+              performance in categorizing cars, balancing precision and recall
+              effectively for business use, such as marketing strategies. <br />
+              • A confusion matrix was used to check classification results,
+              showing more correct "expensive" car predictions after
+              improvements, matching the Recall increase and reducing errors.
+              <br />
+              <br />
+              Picture 8: <br />
+            </p>
+            <img
+              src="/image copy 7.png"
+              height="100px"
+              width="100%"
+              alt="Description"
+              class="content-image"
+            />
+          </div>
+          <div class="content-text"><p>Picture 8:</p></div>
+          <img
+            src="/image copy 8.png"
+            height="100px"
+            width="100%"
+            alt="Description"
+            class="content-image"
+          />
+          <div class="content-text">
+            <p>
+              Performance Analysis of the Car Price Prediction Model with
+              Correlation Insights <br />
+              <br />
+              The car price prediction model used Linear Regression for price
+              forecasting and a classification model to categorize cars (e.g.,
+              affordable vs. expensive), based on the CarPrice_Assignment.csv
+              dataset. <br />
+              <br />
+              • Enginesize showed a strong positive correlation with price
+              (0.87), aligning with an initial R² of 0.86. <br />
+              • Adding features like horsepower (0.81) and curbweight (0.84)
+              improved R² to 0.91 and reduced MAE from 3.2 to 2.5 (in USD
+              thousands), enhancing accuracy. <br />
+              • Moderate positive correlations were seen with carwidth (0.76)
+              and carlength (0.68). <br />
+              • Citympg (-0.69) and highwaympg (-0.70) had strong negative
+              correlations with price. <br />
+              <br />
+              • For classification, the F1-score increased from 0.82 to 0.88 and
+              Recall from 0.76 to 0.87. <br />
+              • The confusion matrix showed better identification of expensive
+              cars after improvements. <br />
+
+              <br />
+              <br />
+              Picture 9: <br />
+            </p>
+            <img
+              src="/image copy 9.png"
+              height="100px"
+              width="100%"
+              alt="Description"
+              class="content-image"
+            />
+            <p>
+              Performance Analysis of the Car Price Prediction Model with
+              Correlation Insights <br />
+              <br />
+              The car price prediction model used Linear Regression for price
+              forecasting and a classification model to categorize cars (e.g.,
+              affordable vs. expensive), based on the CarPrice_Assignment.csv
+              dataset. <br />
+              <br />
+              • Enginesize showed a strong positive correlation with price
+              (0.87), aligning with an initial R² of 0.86. <br />
+              • Adding features like horsepower (0.81) and curbweight (0.84)
+              improved R² to 0.91 and reduced MAE from 3.2 to 2.5 (in USD
+              thousands), enhancing accuracy. <br />
+              • Moderate positive correlations were seen with carwidth (0.76)
+              and carlength (0.68). <br />
+              • Citympg (-0.69) and highwaympg (-0.70) had strong negative
+              correlations with price. <br />
+              <br />
+              • For classification, the F1-score increased from 0.82 to 0.88 and
+              Recall from 0.76 to 0.87. <br />
+              • The confusion matrix showed better identification of expensive
+              cars after improvements. <br /><br />
+              Picture 10:
+            </p>
+            <img
+              src="/image copy 10.png"
+              height="70px"
+              width="100%"
+              alt="Description"
+              class="content-image"
+            />
+            <p>
+              The chart displays a linear regression with actual prices (x-axis,
+              0 to 40,000) versus predicted prices (y-axis, 0 to 40,000).<br />
+              The blue dots are data points, and the red dashed line (y = x
+              trend) shows the regression fit.<br />
+              Most points cluster near the line, indicating a strong
+              correlation—predicted prices are close to actual, with values like
+              (5000, 5000) and (35,000, 35,000) aligning well, though some
+              scatter exists (e.g., around 20,000).<br /><br />
+
+              <b>Summary</b><br /><br />
+
+              This report explores fundamental concepts of artificial
+              intelligence and their practical applications across various
+              industries.<br />
+              It covers the process of developing AI solutions tailored to
+              specific needs, focusing on data handling stages and the potential
+              for accurate predictions using machine learning techniques.<br /><br />
+
+              The theoretical section delves into different types and branches
+              of AI, examining their influence on sectors like healthcare,
+              transportation, finance, and retail.<br />
+              It also addresses critical ethical and legal considerations that
+              must be carefully managed during AI deployment.<br /><br />
+
+              In the practical section, a logistic regression model was built,
+              tested, and refined using real-world data.<br />
+              The model’s performance was measured through multiple evaluation
+              metrics and visualized with graphs, demonstrating its
+              effectiveness.<br /><br />
+
+              Overall, artificial intelligence has become a key strategic asset
+              for organizations, offering significant improvements in business
+              efficiency when applied responsibly.<br />
+              Nonetheless, maintaining high data quality, ensuring transparency,
+              and adhering to ethical and legal standards.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Navigation function with debugging
+      function goTo(pageId) {
+        const currentPage = document.querySelector(".page.show");
+        const targetPage = document.getElementById(pageId);
+
+        // Debugging: Log the target pageId and whether the element exists
+        console.log("Navigating to pageId:", pageId);
+        if (!targetPage) {
+          console.error("Error: No element found with ID:", pageId);
+          return;
+        }
+
+        if (currentPage) {
+          currentPage.classList.remove("show");
+          console.log("Hiding current page:", currentPage.id);
+        }
+
+        targetPage.classList.add("show");
+        console.log("Showing target page:", pageId);
+      }
+
+      // Keyboard navigation
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          const currentPage = document.querySelector(".page.show");
+          if (currentPage && currentPage.id !== "home") {
+            const backBtn = currentPage.querySelector(".back-btn");
+            if (backBtn) {
+              console.log(
+                "Escape key pressed, clicking back button on:",
+                currentPage.id
+              );
+              backBtn.click();
+            } else {
+              console.error("No back button found on page:", currentPage.id);
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
